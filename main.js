@@ -1,3 +1,5 @@
+//DO NOT TOUCH ANY OF THIS OR IM GONNA GO CRAZYYYYY
+
 const clientId = "239c02e71a50471c92930526f206636f"
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
@@ -10,6 +12,7 @@ if (!code) {
     populateUI(profile);
 }
 
+//DO NOT TOUCH
 export async function redirectToAuthCodeFlow(clientId) {
   const verifier = generateCodeVerifier(128);
   const challenge = await generateCodeChallenge(verifier);
@@ -27,6 +30,7 @@ export async function redirectToAuthCodeFlow(clientId) {
   document.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
 }
 
+//DO NOT TOUCH
 function generateCodeVerifier(length) {
   let text = '';
   let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -37,6 +41,7 @@ function generateCodeVerifier(length) {
   return text;
 }
 
+//DO NOT TOUCH
 async function generateCodeChallenge(codeVerifier) {
   const data = new TextEncoder().encode(codeVerifier);
   const digest = await window.crypto.subtle.digest('SHA-256', data);
@@ -46,7 +51,7 @@ async function generateCodeChallenge(codeVerifier) {
       .replace(/=+$/, '');
 }
 
-
+//DO NOT TOUCH
 export async function getAccessToken(clientId, code) {
   const verifier = localStorage.getItem("verifier");
 
@@ -67,6 +72,7 @@ export async function getAccessToken(clientId, code) {
   return access_token;
 }
 
+// api call for profile info
 async function fetchProfile(token) {
   const result = await fetch("https://api.spotify.com/v1/me", {
       method: "GET", headers: { Authorization: `Bearer ${token}` } 
@@ -76,7 +82,7 @@ async function fetchProfile(token) {
   
 } 
 
-
+//convert api to html text
 function populateUI(profile) {
   document.getElementById("displayName").innerText = profile.display_name;
   if (profile.images[0]) {
@@ -92,3 +98,19 @@ function populateUI(profile) {
   document.getElementById("url").innerText = profile.href;
   document.getElementById("url").setAttribute("href", profile.href);
 }
+
+
+/*
+API CURL LIST!
+
+// get playlist items
+curl --request GET \
+  --url 'https://api.spotify.com/v1/playlists/1udqwx26htiKljZx4HwVxs/tracks?fields=items%28track%28name%2C+artists%2C+explicit%2C+uri%2C+name%29%29&limit=100&offset=0' \
+  --header 'Authorization: Bearer' + token
+
+// add to queue
+curl --request POST \
+  --url 'https://api.spotify.com/v1/me/player/queue?uri=' + uri \
+  --header 'Authorization: Bearer' + token
+
+*/
