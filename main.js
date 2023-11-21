@@ -114,7 +114,7 @@ $.ajax({
       'Authorization': `Bearer ${token}`
     },
     data: {
-      'fields': 'items(track(name, artists, explicit, uri, name))',
+      'fields': 'items(track(name, artists, explicit, uri, album(name, images(url))))',
       'limit': '100',
       'offset': '0'
     }
