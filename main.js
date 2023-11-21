@@ -101,78 +101,26 @@ function populateUI(profile) {
 
 
 /*
-API CURL LIST!
-
 // get playlist items
 curl --request GET \
   --url 'https://api.spotify.com/v1/playlists/1udqwx26htiKljZx4HwVxs/tracks?fields=items%28track%28name%2C+artists%2C+explicit%2C+uri%2C+name%29%29&limit=100&offset=0' \
   --header 'Authorization: Bearer' + token
 */
-  var os = require('os');
-if (os.platform() == 'win32') {  
-    if (os.arch() == 'ia32') {
-        var chilkat = require('@chilkat/ck-node17-win-ia32');
-    } else {
-        var chilkat = require('@chilkat/ck-node17-win64'); 
+
+$.ajax({
+    url: 'https://api.spotify.com/v1/playlists/1udqwx26htiKljZx4HwVxs/tracks',
+    crossDomain: true,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+    data: {
+      'fields': 'items(track(name, artists, explicit, uri, name))',
+      'limit': '100',
+      'offset': '0'
     }
-} else if (os.platform() == 'linux') {
-    if (os.arch() == 'arm') {
-        var chilkat = require('@chilkat/ck-node17-arm');
-    } else if (os.arch() == 'x86') {
-        var chilkat = require('@chilkat/ck-node17-linux32');
-    } else {
-        var chilkat = require('@chilkat/ck-node17-linux64');
-    }
-} else if (os.platform() == 'darwin') {
-    var chilkat = require('@chilkat/ck-node17-macosx');
-}
-
-function chilkatExample() {
-
-    var rest = new chilkat.Rest();
-    var success;
-
-    // URL: token
-    var bTls = false;
-    var port = 80;
-    var bAutoReconnect = true;
-    success = rest.Connect("token",port,bTls,bAutoReconnect);
-    if (success !== true) {
-        console.log("ConnectFailReason: " + rest.ConnectFailReason);
-        console.log(rest.LastErrorText);
-        return;
-    }
-
-    // Note: The above code does not need to be repeatedly called for each REST request.
-    // The rest object can be setup once, and then many requests can be sent.  Chilkat will automatically
-    // reconnect within a FullRequest* method as needed.  It is only the very first connection that is explicitly
-    // made via the Connect method.
-
-    rest.AddHeader("Authorization","Bearer");
-
-    var sbResponseBody = new chilkat.StringBuilder();
-    success = rest.FullRequestNoBodySb("GET","/",sbResponseBody);
-    if (success !== true) {
-        console.log(rest.LastErrorText);
-        return;
-    }
-
-    var respStatusCode = rest.ResponseStatusCode;
-    console.log("response status code = " + respStatusCode);
-    if (respStatusCode >= 400) {
-        console.log("Response Status Code = " + respStatusCode);
-        console.log("Response Header:");
-        console.log(rest.ResponseHeader);
-        console.log("Response Body:");
-        console.log(sbResponseBody.GetAsString());
-        return;
-    }
-
-
-}
-
-chilkatExample();
-
+  }).done(function(response) {
+    console.log(response);
+  });
 
 /*
 // add to queue
@@ -181,67 +129,14 @@ curl --request POST \
   --header 'Authorization: Bearer' + token
 */
 
-var os = require('os');
-if (os.platform() == 'win32') {  
-    if (os.arch() == 'ia32') {
-        var chilkat = require('@chilkat/ck-node17-win-ia32');
-    } else {
-        var chilkat = require('@chilkat/ck-node17-win64'); 
+$.ajax({
+    url: 'https://api.spotify.com/v1/me/player/queue?uri=' + uri,
+    crossDomain: true,
+    method: 'post',
+    headers: {
+        'Authorization': `Bearer ${token}`
     }
-} else if (os.platform() == 'linux') {
-    if (os.arch() == 'arm') {
-        var chilkat = require('@chilkat/ck-node17-arm');
-    } else if (os.arch() == 'x86') {
-        var chilkat = require('@chilkat/ck-node17-linux32');
-    } else {
-        var chilkat = require('@chilkat/ck-node17-linux64');
-    }
-} else if (os.platform() == 'darwin') {
-    var chilkat = require('@chilkat/ck-node17-macosx');
-}
+  }).done(function(response) {
+    console.log(response);
+  });
 
-function chilkatExample() {
-
-    var rest = new chilkat.Rest();
-    var success;
-
-    // URL: token
-    var bTls = false;
-    var port = 80;
-    var bAutoReconnect = true;
-    success = rest.Connect("token",port,bTls,bAutoReconnect);
-    if (success !== true) {
-        console.log("ConnectFailReason: " + rest.ConnectFailReason);
-        console.log(rest.LastErrorText);
-        return;
-    }
-
-    // Note: The above code does not need to be repeatedly called for each REST request.
-    // The rest object can be setup once, and then many requests can be sent.  Chilkat will automatically
-    // reconnect within a FullRequest* method as needed.  It is only the very first connection that is explicitly
-    // made via the Connect method.
-
-    rest.AddHeader("Authorization","Bearer");
-
-    var sbResponseBody = new chilkat.StringBuilder();
-    success = rest.FullRequestNoBodySb("POST","/",sbResponseBody);
-    if (success !== true) {
-        console.log(rest.LastErrorText);
-        return;
-    }
-
-    var respStatusCode = rest.ResponseStatusCode;
-    console.log("response status code = " + respStatusCode);
-    if (respStatusCode >= 400) {
-        console.log("Response Status Code = " + respStatusCode);
-        console.log("Response Header:");
-        console.log(rest.ResponseHeader);
-        console.log("Response Body:");
-        console.log(sbResponseBody.GetAsString());
-        return;
-    }
-
-
-}
-
-chilkatExample();
