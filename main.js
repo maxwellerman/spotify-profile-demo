@@ -8,9 +8,9 @@ if (!code) {
     redirectToAuthCodeFlow(clientId);
 } else {
     const accessToken = await getAccessToken(clientId, code);
-    const profile = await fetchProfile(accessToken);
-    populateUI(profile);
-}
+    const items = await fetchProfile(accessToken);
+    console.log(items);
+  }
 
 //DO NOT TOUCH
 export async function redirectToAuthCodeFlow(clientId) {
@@ -73,18 +73,22 @@ export async function getAccessToken(clientId, code) {
 }
 
 // api call for profile info
-async function fetchProfile(token) {
-  const result = await fetch("https://api.spotify.com/v1/me", {
-      method: "GET", headers: { Authorization: `Bearer ${token}` } 
+async function fetchProfile(accessToken) {
+ const result = await fetch("https://api.spotify.com/v1/playlists/1udqwx26htiKljZx4HwVxs/tracks?fields=items%28track%28name%2C+artists%2C+explicit%2C+uri%2C+name%29%29&limit=100&offset=0", {
+      method: "GET", headers: { Authorization: `Bearer ${accessToken}` }, data: {
+        'fields': 'items(track(name, artists, explicit, uri, album(name, images(url))))',
+        'limit': '100',
+        'offset': '0'
+      }
   } );
 
-  return await result.json();
+return await result.json(); 
   
 } 
 
-//convert api to html text
-function populateUI(profile) {
-  document.getElementById("displayName").innerText = profile.display_name;
+//convert api to html 
+function populateUI(items) {
+  /* document.getElementById("displayName").innerText = profile.display_name;
   if (profile.images[0]) {
       const profileImage = new Image(200, 200);
       profileImage.src = profile.images[0].url;
@@ -96,33 +100,27 @@ function populateUI(profile) {
   document.getElementById("uri").innerText = profile.uri;
   document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
   document.getElementById("url").innerText = profile.href;
-  document.getElementById("url").setAttribute("href", profile.href);
+  document.getElementById("url").setAttribute("href", profile.href); */
+
+  // button for loop
+  for (var i=0; i < items.length ; i++){
+    var element = document.createElement("input");
+    //Assign different attributes to the element. 
+    element.setAttribute("type", type);
+    element.setAttribute("value", type);
+    element.setAttribute("name", type);
+    
+
+    document.getElementById("queueButton").addEventListener("click", AddtoQueue);
+
+}
+
 }
 
 
-/*
-// get playlist items
-curl --request GET \
-  --url 'https://api.spotify.com/v1/playlists/1udqwx26htiKljZx4HwVxs/tracks?fields=items%28track%28name%2C+artists%2C+explicit%2C+uri%2C+name%29%29&limit=100&offset=0' \
-  --header 'Authorization: Bearer' + token
-*/
+function AddtoQueue() {
 
-$.ajax({
-    url: 'https://api.spotify.com/v1/playlists/1udqwx26htiKljZx4HwVxs/tracks',
-    crossDomain: true,
-    headers: {
-      'Authorization': `Bearer ${token}`
-    },
-    data: {
-      'fields': 'items(track(name, artists, explicit, uri, album(name, images(url))))',
-      'limit': '100',
-      'offset': '0'
-    }
-  }).done(function(response) {
-    console.log(response);
-  });
-
-/*
+  /*
 // add to queue
 curl --request POST \
   --url 'https://api.spotify.com/v1/me/player/queue?uri=' + uri \
@@ -130,13 +128,16 @@ curl --request POST \
 */
 
 $.ajax({
-    url: 'https://api.spotify.com/v1/me/player/queue?uri=' + uri,
-    crossDomain: true,
-    method: 'post',
-    headers: {
-        'Authorization': `Bearer ${token}`
-    }
-  }).done(function(response) {
-    console.log(response);
-  });
+  url: 'https://api.spotify.com/v1/me/player/queue?uri=' + uri, //figure out how to call this variable correctly. 
+  crossDomain: true,
+  method: 'post',
+  headers: {
+      'Authorization': `Bearer ${token}`
+  }
+}).done(function(response) {
+  console.log(response);
+});
+}
+
+
 
