@@ -8,8 +8,8 @@ if (!code) {
     redirectToAuthCodeFlow(clientId);
 } else {
     const accessToken = await getAccessToken(clientId, code);
-    const items = await fetchProfile(accessToken);
-    console.log(items);
+    var items = await fetchProfile(accessToken);
+    populateUI(items);
   }
 
 //DO NOT TOUCH
@@ -101,17 +101,24 @@ function populateUI(items) {
   document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
   document.getElementById("url").innerText = profile.href;
   document.getElementById("url").setAttribute("href", profile.href); */
+  //console.log(items)
+
+  console.log(items[0][0][0]);
 
   // button for loop
   for (var i=0; i < items.length ; i++){
     var newButton = document.createElement("button");
     //Assign different attributes to the element. 
-    newButton.setAttribute("trackname", type);
-    newButton.setAttribute("artist", type);
-    newButton.setAttribute("songlength", type);
+
+    /* code doesnt work lol
+    newButton.setAttribute("trackname", items[i][2]);
+    newButton.setAttribute("artist", items[i][0][0]);
+    newButton.setAttribute("uri", items[i][3])  
+    */  
+
     
 
-    document.getElementById("queueButton").addEventListener("click", AddtoQueue());
+
 
 }
 
