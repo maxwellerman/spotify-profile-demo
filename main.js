@@ -72,7 +72,7 @@ export async function getAccessToken(clientId, code) {
   return access_token;
 }
 
-// api call for profile info
+// THIS WORKS
 async function fetchProfile(accessToken) {
  const result = await fetch("https://api.spotify.com/v1/playlists/1udqwx26htiKljZx4HwVxs/tracks?fields=items%28track%28name%2C+artists%2C+explicit%2C+uri%2C+name%29%29&limit=100&offset=0", {
       method: "GET", headers: { Authorization: `Bearer ${accessToken}` }, data: {
@@ -104,11 +104,11 @@ function populateUI(items) {
 
   // button for loop
   for (var i=0; i < items.length ; i++){
-    var element = document.createElement("input");
+    var newButton = document.createElement("button");
     //Assign different attributes to the element. 
-    element.setAttribute("type", type);
-    element.setAttribute("value", type);
-    element.setAttribute("name", type);
+    newButton.setAttribute("trackname", type);
+    newButton.setAttribute("artist", type);
+    newButton.setAttribute("songlength", type);
     
 
     document.getElementById("queueButton").addEventListener("click", AddtoQueue());
