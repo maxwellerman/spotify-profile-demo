@@ -3,12 +3,13 @@
 const clientId = "239c02e71a50471c92930526f206636f"
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
+var items;
 
 if (!code) {
     redirectToAuthCodeFlow(clientId);
 } else {
     const accessToken = await getAccessToken(clientId, code);
-    var items = await fetchProfile(accessToken);
+    items = await fetchProfile(accessToken);
     populateUI(items);
   }
 
@@ -88,39 +89,30 @@ return await result.json();
 
 //convert api to html 
 function populateUI(items) {
-  /* document.getElementById("displayName").innerText = profile.display_name;
-  if (profile.images[0]) {
-      const profileImage = new Image(200, 200);
-      profileImage.src = profile.images[0].url;
-      document.getElementById("avatar").appendChild(profileImage);
-      document.getElementById("imgUrl").innerText = profile.images[0].url;
-  }
-  document.getElementById("id").innerText = profile.id;
-  document.getElementById("email").innerText = profile.email;
-  document.getElementById("uri").innerText = profile.uri;
-  document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
-  document.getElementById("url").innerText = profile.href;
-  document.getElementById("url").setAttribute("href", profile.href); */
-  //console.log(items)
 
-  console.log(items[0][0][0]);
+  //console.log(items.items[0].track.name);
+  //console.log(items);
+  //console.log(items[0]);
+  console.log(items.items[0].track.name);
+
 
   // button for loop
-  for (var i=0; i < items.length ; i++){
-    var newButton = document.createElement("button");
-    //Assign different attributes to the element. 
+  for (var i=0; i < items.items.length ; i++){
+    var name = items.items[i].track.name.toString();
+    var uri = items.items[i].track.uri.toString();
+    //var artists = items.items[i].track.artist[0].toString();
 
-    /* code doesnt work lol
-    newButton.setAttribute("trackname", items[i][2]);
-    newButton.setAttribute("artist", items[i][0][0]);
-    newButton.setAttribute("uri", items[i][3])  
-    */  
+    const newButton = document.createElement('button');
+    newButton.textContent = name;
+    newButton.setAttribute('class', 'playlistItem');
+    //newButton.setAttribute(artist, artists);
+    document.body.appendChild(newButton);
+    newButton.setAttribute('uri', uri);
+    console.log(uri);
 
-    
+    //newButton.addEventListener("click", AddtoQueue(uri)); 
 
-
-
-}
+  }
 
 }
 
