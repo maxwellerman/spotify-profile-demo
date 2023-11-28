@@ -111,14 +111,14 @@ function populateUI(items) {
     element.setAttribute("name", type);
     
 
-    document.getElementById("queueButton").addEventListener("click", AddtoQueue);
+    document.getElementById("queueButton").addEventListener("click", AddtoQueue());
 
 }
 
 }
 
 
-function AddtoQueue() {
+function AddtoQueue(uri) {
 
   /*
 // add to queue
