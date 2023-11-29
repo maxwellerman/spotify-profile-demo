@@ -1,4 +1,89 @@
-:root {
+html {
+  height: 100%;
+  background-color: #252525;
+}
+
+.container-fluid {
+  height: 100%;
+}
+
+#mediaButtons {
+  text-align: center;
+}
+
+.playlistItem {
+  border-style: none;
+  border-radius: 6px;
+  color: white;
+  background-color: #252525;
+  width: 50px;
+  height: 50px;
+  display: inline-block;
+}
+.playlistItem:hover {
+  background-color: black;
+  color: white;
+}
+
+/*someone please tell me why this fucking svg isnt centered rofl wtf*/
+#PlayPause {
+  border-style: solid;
+  border-color: #009234;
+  border-width: 3px;
+  border-radius: 50px;
+  color: black;
+  background-color: #1DB954;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0px 0px 12px 0px rgba(191,191,191,0.75);
+}
+#PlayPause:hover {
+  filter: invert(100%);
+}
+
+#playNext {
+  border-style: solid;
+  border-color: #009234;
+  border-width: 3px;
+  border-radius: 50px;
+  color: black;
+  background-color: #1DB954;
+  width: 60px;
+  height: 40px;
+  box-shadow: 0px 0px 12px 0px rgba(191,191,191,0.75);
+}
+#playNext:hover {
+  filter: invert(100%);
+}
+
+#playPrev {
+  border-style: solid;
+  border-color: #009234;
+  border-width: 3px;
+  border-radius: 50px;
+  color: black;
+  background-color: #1DB954;
+  width: 60px;
+  height: 40px;
+  box-shadow: 0px 0px 12px 0px rgba(191,191,191,0.75);
+}
+#playPrev:hover {
+  filter: invert(100%);
+}
+
+#backwards {
+  width: 40px;
+}
+
+/* CENTER IDIT */
+#pause {
+  width: 40px;
+}
+
+#forwards {
+  width: 40px;
+}
+/* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -23,7 +108,7 @@ a:hover {
 }
 
 body {
-  margin: 0;
+  margin: 1000px;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -40,16 +125,9 @@ h1 {
 .identifier {
   font-size: 1.15em;
   padding-left: 100px;
-  padding-right: 100px;}
-
-#queueButton {
-  font-size: 1.15em;
-  padding: 15px;
-  padding-left: 10px;
-  padding-right: 10px;
-  font-family: inherit;
+  padding-right: 100px;
 }
-/* button {
+  button {
   border-radius: 3px;
   border: 1px solid;
   font-size: 1em;
