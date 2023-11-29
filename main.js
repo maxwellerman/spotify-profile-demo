@@ -93,8 +93,6 @@ function populateUI(items) {
   //console.log(items.items[0].track.name);
   //console.log(items);
   //console.log(items[0]);
-  console.log(items.items[0].track.name);
-
 
   // button for loop
   for (var i=0; i < items.items.length ; i++){
@@ -107,17 +105,17 @@ function populateUI(items) {
     newButton.setAttribute('class', 'playlistItem');
     //newButton.setAttribute(artist, artists);
     document.body.appendChild(newButton);
-    newButton.setAttribute('uri', uri);
-    console.log(uri);
-
-    //newButton.addEventListener("click", AddtoQueue(uri)); 
+    newButton.setAttribute('id', uri);
+    newButton.setAttribute('onclick', AddtoQueue(uri));
+    //console.log(uri);
 
   }
 
 }
 
 
-function AddtoQueue(uri) {
+
+function AddtoQueue(uri, accessToken) {
 
   /*
 // add to queue
@@ -126,17 +124,22 @@ curl --request POST \
   --header 'Authorization: Bearer' + token
 */
 
+//console.log(uri);
+
+/*
 $.ajax({
   url: 'https://api.spotify.com/v1/me/player/queue?uri=' + uri, //figure out how to call this variable correctly. 
   crossDomain: true,
   method: 'post',
   headers: {
-      'Authorization': `Bearer ${token}`
+      'Authorization': `Bearer ${accessToken}`
   }
 }).done(function(response) {
   console.log(response);
 });
-}
+*/
+} 
+
 
 
 
