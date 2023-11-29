@@ -87,7 +87,7 @@ return await result.json();
   
 } 
 
-//convert api to html 
+//convert api to html . WORKS
 function populateUI(items) {
 
   //console.log(items.items[0].track.name);
@@ -106,12 +106,12 @@ function populateUI(items) {
     //newButton.setAttribute(artist, artists);
     document.body.appendChild(newButton);
     newButton.setAttribute('id', uri);
-    newButton.setAttribute('onclick', AddtoQueue(uri));
     //console.log(uri);
 
   }
 
 }
+
 
 
 
@@ -139,6 +139,87 @@ $.ajax({
 });
 */
 } 
+
+function PlayPause(accessToken) {
+
+  // determine playstate of track
+  $.ajax({
+    url: 'https://api.spotify.com/v1/me/player',
+    crossDomain: true,
+    headers: {
+      'Authorization': `Bearer ${accessToken}`
+    }
+  }).done(function(response) {
+    console.log(response);
+  });
+
+  // if track is playing, pause
+  if (is_playing = true) {
+
+    $.ajax({
+      url: 'https://api.spotify.com/v1/me/player/pause',
+      crossDomain: true,
+      method: 'put',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    }).done(function(response) {
+      console.log(response);
+    });
+
+  }
+
+  // if track is paused, play
+  else {
+
+    $.ajax({
+      url: 'https://api.spotify.com/v1/me/player/play',
+      crossDomain: true,
+      method: 'put',
+      headers: {
+        'Authorization':  `Bearer ${accessToken}`
+      },
+      contentType: 'application/json',
+      // data: '{\n    "context_uri": "spotify:playlist:1udqwx26htiKljZx4HwVxs",\n    "position_ms": 0\n}',
+      data: JSON.stringify({
+        'context_uri': 'spotify:playlist:1udqwx26htiKljZx4HwVxs',
+        'position_ms': 0
+      })
+    }).done(function(response) {
+      console.log(response);
+    });
+
+  }
+}
+
+function playNext(accessToken) {
+  $.ajax({
+    url: 'https://api.spotify.com/v1/me/player/next',
+    crossDomain: true,
+    method: 'post',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`
+    }
+  }).done(function(response) {
+    console.log(response);
+  });
+}
+
+function playPrev(accessToken) {
+
+$.ajax({
+  url: 'https://api.spotify.com/v1/me/player/previous',
+  crossDomain: true,
+  method: 'post',
+  headers: {
+    'Authorization': `Bearer ${accessToken}`
+  }
+}).done(function(response) {
+  console.log(response);
+});
+
+
+}
 
 
 
