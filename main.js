@@ -106,7 +106,7 @@ function populateUI(items) {
     newButton.setAttribute('class', 'playlistItem');
     //newButton.setAttribute(artist, artists);
     document.body.appendChild(newButton);
-    newButton.setAttribute('id', uri);
+    newButton.setAttribute('uri', uri);
     //console.log(uri);
 
   }
