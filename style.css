@@ -17,9 +17,10 @@ html {
   color: white;
   background-color: #009234;
   width: auto;
-  height: auto;
+  height: 16px;
   font-size: 56px;
   padding: 300px;
+  text-align: center;
 }
 .playlistItem:hover {
   background-color: black;
