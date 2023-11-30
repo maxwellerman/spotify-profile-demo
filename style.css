@@ -3,13 +3,14 @@ html {
   background-color: #252525;
 }
 
-.container-fluid {
-  height: 100%;
+body {
   background-color: #252525;
+  display: inline;
+  text-align: center;
 }
 
-#mediaButtons {
-  text-align: center;
+  .container-fluid {
+  height: 100%;
 }
 
 .playlistItem {
