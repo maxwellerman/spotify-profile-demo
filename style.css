@@ -5,6 +5,7 @@ html {
 
 .container-fluid {
   height: 100%;
+  background-color: #252525;
 }
 
 #mediaButtons {
