@@ -140,7 +140,7 @@ curl --request POST \
 
 
 $.ajax({
-  url: 'https://api.spotify.com/v1/me/player/queue?uri=' + uri + '&device_id=939baa7b891d9b5363ed95746731b9a561f497d7', 
+  url: 'https://api.spotify.com/v1/me/player/queue?uri=' + uri, 
   crossDomain: true,
   method: 'post',
   headers: {
