@@ -14,18 +14,19 @@ if (!code) {
     items = await fetchProfile(accessToken);
     populateUI(items);
 
-    const btn = document.getElementById("PlayPause")
+  var allButtons = document.querySelectorAll('button[class^=playlistItem]');
+  console.log("Found", allButtons.length, "div which class starts with playlistItem.");
+  var uriList = document.querySelectorAll('button[uri]');
+  console.log(uriList);
 
-    btn.addEventListener("click", function togglePlay() {
-      playback =  getPlayback(accessToken);
-      console.log(playback);
-      var status = playback.status;
-      PlayPause(accessToken, status);
-    })
-    // this needs to be button on click
+  allButtons.forEach(btn => {
+   btn.addEventListener('click', function() {
+    AddtoQueue(btn.getAttribute('uri'), accessToken);
+  })})
 
 
-  }
+
+}
 
 //DO NOT TOUCH
 export async function redirectToAuthCodeFlow(clientId) {
@@ -129,18 +130,17 @@ function populateUI(items) {
 
 function AddtoQueue(uri, accessToken) {
 
-  /*
+/*
 // add to queue
 curl --request POST \
   --url 'https://api.spotify.com/v1/me/player/queue?uri=' + uri \
   --header 'Authorization: Bearer' + token
 */
 
-//console.log(uri);
 
-/*
+
 $.ajax({
-  url: 'https://api.spotify.com/v1/me/player/queue?uri=' + uri, //figure out how to call this variable correctly. 
+  url: 'https://api.spotify.com/v1/me/player/queue?uri=' + uri + '&device_id=939baa7b891d9b5363ed95746731b9a561f497d7', 
   crossDomain: true,
   method: 'post',
   headers: {
@@ -149,99 +149,9 @@ $.ajax({
 }).done(function(response) {
   console.log(response);
 });
-*/
+
+console.log(uri);
+
+
 } 
-
-async function getPlayback(accessToken) {
-    // determine playstate of track
-
-     const playstate = await fetch('https://api.spotify.com/v1/me/player', {
-      headers: { Authorization: `Bearer ${accessToken}` }
-    }); 
-
-    console.log(playstate);
-
-    return playstate;
-}
-
-//something isn't right here. idk what.
-function PlayPause(accessToken, status) {
-
-  // if track is playing, pause
-  var status = status;
-  console.log(status);
-
-  if (status == 200) {
-
-    console.log("PAUSE");
-
-    $.ajax({
-      url: 'https://api.spotify.com/v1/me/player/pause',
-      crossDomain: true,
-      method: 'put',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-      }
-    }).done(function(response) {
-      console.log(response);
-    });
-
-  }
-
-  // if track is paused, play
-  else {
-
-    $.ajax({
-      url: 'https://api.spotify.com/v1/me/player/play',
-      crossDomain: true,
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-      },
-      contentType: 'application/json',
-      //data: '{"context_uri": "spotify:playlist:1udqwx26htiKljZx4HwVxs",\n    "position_ms": 0\n}',
-      data: JSON.stringify({
-        'context_uri': 'spotify:playlist:1udqwx26htiKljZx4HwVxs',
-        'position_ms': 0
-      })
-    }).done(function(response) {
-      console.log(response);
-    });
-
-    console.log("PLAY");
-
-  }
-}
-
-function playNext(accessToken) {
-  $.ajax({
-    url: 'https://api.spotify.com/v1/me/player/next',
-    crossDomain: true,
-    method: 'post',
-    headers: {
-      'Authorization': `Bearer ${accessToken}`
-    }
-  }).done(function(response) {
-    console.log(response);
-  });
-}
-
-function playPrev(accessToken) {
-
-$.ajax({
-  url: 'https://api.spotify.com/v1/me/player/previous',
-  crossDomain: true,
-  method: 'post',
-  headers: {
-    'Authorization': `Bearer ${accessToken}`
-  }
-}).done(function(response) {
-  console.log(response);
-});
-
-
-}
-
-
-
 
