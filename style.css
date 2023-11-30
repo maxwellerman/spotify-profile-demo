@@ -5,23 +5,26 @@ html {
 
 body {
   background-color: #252525;
-  display: inline;
+  display: inline-block;
   text-align: center;
 }
 
   .container-fluid {
+  display: none;
   height: 100%;
 }
 
 .playlistItem {
-  border-style: none;
+  border-style: solid;
+  border-width: 10px;
+  border-color: #009234;
   border-radius: 6px;
   color: white;
   background-color: #009234;
   width: auto;
-  height: 16px;
-  font-size: 42px;
-  padding: 100px;
+  height: auto;
+  font-size: 28px;
+  padding: 50px;
 }
 .playlistItem:hover {
   background-color: black;
