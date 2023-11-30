@@ -1,10 +1,58 @@
 	//DO NOT TOUCH ANY OF THIS OR IM GONNA GO CRAZYYYYY PLEASE PLEASE PLEASE PLEASE
+  const clientId = "239c02e71a50471c92930526f206636f"
+  const scope = 'user-read-playback-state user-modify-playback-state';
+  const authUrl = new URL("https://accounts.spotify.com/authorize")
+  const redirectUri = 'http://localhost:5173/callback';
 
-const clientId = "239c02e71a50471c92930526f206636f"
-const params = new URLSearchParams(window.location.search);
-const code = params.get("code");
+  const generateRandomString = (length) => {
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const values = crypto.getRandomValues(new Uint8Array(length));
+    return values.reduce((acc, x) => acc + possible[x % possible.length], "");
+  }
+  
+  const codeVerifier  = generateRandomString(64);
+  
+  const sha256 = async (plain) => {
+    const encoder = new TextEncoder()
+    const data = encoder.encode(plain)
+    return window.crypto.subtle.digest('SHA-256', data)
+  }
+
+  const base64encode = (input) => {
+    return btoa(String.fromCharCode(...new Uint8Array(input)))
+      .replace(/=/g, '')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_');
+  }
+  const hashed = await sha256(codeVerifier)
+  const codeChallenge = base64encode(hashed);
+
+  const params =  {
+    response_type: 'code',
+    client_id: clientId,
+    scope,
+    code_challenge_method: 'S256',
+    code_challenge: codeChallenge,
+    redirect_uri: redirectUri,
+  }
+  
+  authUrl.search = new URLSearchParams(params).toString();
+  window.location.href = authUrl.toString();
+  
+  
+
+//const params = new URLSearchParams(window.location.search);
+const urlParams = new URLSearchParams(window.location.search);
+let code = urlParams.get('code');
+
 var items;
+var playback;
 
+
+
+
+// generated in the previous step
+window.localStorage.setItem('code_verifier', codeVerifier);
 
 if (!code) {
     redirectToAuthCodeFlow(clientId);
@@ -12,6 +60,9 @@ if (!code) {
     const accessToken = await getAccessToken(clientId, code);
     items = await fetchProfile(accessToken);
     populateUI(items);
+    playback = await getPlayback(accessToken);
+    console.log(playback);
+
   }
 
 //DO NOT TOUCH
@@ -43,7 +94,33 @@ function generateCodeVerifier(length) {
   return text;
 }
 
-//DO NOT TOUCH
+const getToken = async code => {
+
+  // stored in the previous step
+  let codeVerifier = localStorage.getItem('code_verifier');
+
+  const payload = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      client_id: clientId,
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: redirectUri,
+      code_verifier: codeVerifier,
+    }),
+  }
+
+  const body = await fetch(url, payload);
+  const response =await body.json();
+
+  localStorage.setItem('access_token', response.access_token);
+}
+
+
+// DO NOT TOUCH
 async function generateCodeChallenge(codeVerifier) {
   const data = new TextEncoder().encode(codeVerifier);
   const digest = await window.crypto.subtle.digest('SHA-256', data);
@@ -51,10 +128,10 @@ async function generateCodeChallenge(codeVerifier) {
       .replace(/\+/g, '-')
       .replace(/\//g, '_')
       .replace(/=+$/, '');
-}
+} 
 
-//DO NOT TOUCH
-export async function getAccessToken(clientId, code) {
+//DO NOT TOUCH 
+/* export async function getAccessToken(clientId, code) {
   const verifier = localStorage.getItem("verifier");
 
   const params = new URLSearchParams();
@@ -72,7 +149,7 @@ export async function getAccessToken(clientId, code) {
 
   const { access_token } = await result.json();
   return access_token;
-}
+} */
 
 // THIS WORKS
 async function fetchProfile(accessToken) {
@@ -114,8 +191,6 @@ function populateUI(items) {
 }
 
 
-
-
 function AddtoQueue(uri, accessToken) {
 
   /*
@@ -141,18 +216,18 @@ $.ajax({
 */
 } 
 
-function PlayPause(accessToken) {
+async function getPlayback(accessToken) {
+    // determine playstate of track
 
-  // determine playstate of track
-  $.ajax({
-    url: 'https://api.spotify.com/v1/me/player',
-    crossDomain: true,
-    headers: {
-      'Authorization': `Bearer ${accessToken}`
-    }
-  }).done(function(response) {
-    console.log(response);
-  });
+    const playstate = await fetch('https://api.spotify.com/v1/me/player', {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+
+    return await playstate.json();
+}
+
+//something isn't right here. idk what.
+function PlayPause(accessToken, playback) {
 
   // if track is playing, pause
   if (is_playing = true) {
