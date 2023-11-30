@@ -15,9 +15,10 @@ body {
 }
 
 .playlistItem {
+  margin: auto;
   border-style: solid;
   border-width: 10px;
-  border-color: #009234;
+  border-color: #1DB954;
   border-radius: 6px;
   color: white;
   background-color: #009234;
