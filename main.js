@@ -1,67 +1,29 @@
-	//DO NOT TOUCH ANY OF THIS OR IM GONNA GO CRAZYYYYY PLEASE PLEASE PLEASE PLEASE
-  const clientId = "239c02e71a50471c92930526f206636f"
-  const scope = 'user-read-playback-state user-modify-playback-state';
-  const authUrl = new URL("https://accounts.spotify.com/authorize")
-  const redirectUri = 'http://localhost:5173/callback';
-
-  const generateRandomString = (length) => {
-    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const values = crypto.getRandomValues(new Uint8Array(length));
-    return values.reduce((acc, x) => acc + possible[x % possible.length], "");
-  }
-  
-  const codeVerifier  = generateRandomString(64);
-  
-  const sha256 = async (plain) => {
-    const encoder = new TextEncoder()
-    const data = encoder.encode(plain)
-    return window.crypto.subtle.digest('SHA-256', data)
-  }
-
-  const base64encode = (input) => {
-    return btoa(String.fromCharCode(...new Uint8Array(input)))
-      .replace(/=/g, '')
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_');
-  }
-  const hashed = await sha256(codeVerifier)
-  const codeChallenge = base64encode(hashed);
-
-  const params =  {
-    response_type: 'code',
-    client_id: clientId,
-    scope,
-    code_challenge_method: 'S256',
-    code_challenge: codeChallenge,
-    redirect_uri: redirectUri,
-  }
-  
-  authUrl.search = new URLSearchParams(params).toString();
-  window.location.href = authUrl.toString();
-  
-  
-
-//const params = new URLSearchParams(window.location.search);
-const urlParams = new URLSearchParams(window.location.search);
-let code = urlParams.get('code');
-
+//DO NOT TOUCH ANY OF THIS OR IM GONNA GO CRAZYYYYY PLEASE PLEASE PLEASE PLEASE
+const clientId = "239c02e71a50471c92930526f206636f"
+var redirect_uri = 'http://localhost:8888/callback';
+var clientSecret = '5414e5c0b6554023a148d1607955048d';
+const params = new URLSearchParams(window.location.search);
+const code = params.get("code");
 var items;
 var playback;
 
-
-
-
-// generated in the previous step
-window.localStorage.setItem('code_verifier', codeVerifier);
-
 if (!code) {
-    redirectToAuthCodeFlow(clientId);
+  redirectToAuthCodeFlow(clientId);
 } else {
     const accessToken = await getAccessToken(clientId, code);
     items = await fetchProfile(accessToken);
     populateUI(items);
-    playback = await getPlayback(accessToken);
-    console.log(playback);
+
+    const btn = document.getElementById("PlayPause")
+
+    btn.addEventListener("click", function togglePlay() {
+      playback =  getPlayback(accessToken);
+      console.log(playback);
+      var status = playback.status;
+      PlayPause(accessToken, status);
+    })
+    // this needs to be button on click
+
 
   }
 
@@ -76,7 +38,7 @@ export async function redirectToAuthCodeFlow(clientId) {
   params.append("client_id", clientId);
   params.append("response_type", "code");	
   params.append("redirect_uri", "http://localhost:5173/callback");
-  params.append("scope", "user-read-private user-read-email");
+  params.append("scope", "user-read-playback-state user-modify-playback-state");
   params.append("code_challenge_method", "S256");
   params.append("code_challenge", challenge);
 
@@ -94,32 +56,6 @@ function generateCodeVerifier(length) {
   return text;
 }
 
-const getToken = async code => {
-
-  // stored in the previous step
-  let codeVerifier = localStorage.getItem('code_verifier');
-
-  const payload = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: new URLSearchParams({
-      client_id: clientId,
-      grant_type: 'authorization_code',
-      code,
-      redirect_uri: redirectUri,
-      code_verifier: codeVerifier,
-    }),
-  }
-
-  const body = await fetch(url, payload);
-  const response =await body.json();
-
-  localStorage.setItem('access_token', response.access_token);
-}
-
-
 // DO NOT TOUCH
 async function generateCodeChallenge(codeVerifier) {
   const data = new TextEncoder().encode(codeVerifier);
@@ -131,25 +67,25 @@ async function generateCodeChallenge(codeVerifier) {
 } 
 
 //DO NOT TOUCH 
-/* export async function getAccessToken(clientId, code) {
-  const verifier = localStorage.getItem("verifier");
+export async function getAccessToken(clientId, code) {
+    const verifier = localStorage.getItem("verifier");
 
-  const params = new URLSearchParams();
-  params.append("client_id", clientId);
-  params.append("grant_type", "authorization_code");
-  params.append("code", code);
-  params.append("redirect_uri", "http://localhost:5173/callback");
-  params.append("code_verifier", verifier);
+    const params = new URLSearchParams();
+    params.append("client_id", clientId);
+    params.append("grant_type", "authorization_code");
+    params.append("code", code);
+    params.append("redirect_uri", "http://localhost:5173/callback");
+    params.append("code_verifier", verifier);
 
-  const result = await fetch("https://accounts.spotify.com/api/token", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: params
-  });
+    const result = await fetch("https://accounts.spotify.com/api/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params
+    });
 
-  const { access_token } = await result.json();
-  return access_token;
-} */
+    const { access_token } = await result.json();
+    return access_token;
+}
 
 // THIS WORKS
 async function fetchProfile(accessToken) {
@@ -219,25 +155,32 @@ $.ajax({
 async function getPlayback(accessToken) {
     // determine playstate of track
 
-    const playstate = await fetch('https://api.spotify.com/v1/me/player', {
+     const playstate = await fetch('https://api.spotify.com/v1/me/player', {
       headers: { Authorization: `Bearer ${accessToken}` }
-    });
+    }); 
 
-    return await playstate.json();
+    console.log(playstate);
+
+    return playstate;
 }
 
 //something isn't right here. idk what.
-function PlayPause(accessToken, playback) {
+function PlayPause(accessToken, status) {
 
   // if track is playing, pause
-  if (is_playing = true) {
+  var status = status;
+  console.log(status);
+
+  if (status == 200) {
+
+    console.log("PAUSE");
 
     $.ajax({
       url: 'https://api.spotify.com/v1/me/player/pause',
       crossDomain: true,
       method: 'put',
       headers: {
-        'Authorization': `Bearer ${accessToken}`
+        'Authorization': `Bearer ${accessToken}`,
       }
     }).done(function(response) {
       console.log(response);
@@ -251,12 +194,12 @@ function PlayPause(accessToken, playback) {
     $.ajax({
       url: 'https://api.spotify.com/v1/me/player/play',
       crossDomain: true,
-      method: 'put',
+      method: 'PUT',
       headers: {
-        'Authorization':  `Bearer ${accessToken}`
+        'Authorization': `Bearer ${accessToken}`,
       },
       contentType: 'application/json',
-      // data: '{\n    "context_uri": "spotify:playlist:1udqwx26htiKljZx4HwVxs",\n    "position_ms": 0\n}',
+      //data: '{"context_uri": "spotify:playlist:1udqwx26htiKljZx4HwVxs",\n    "position_ms": 0\n}',
       data: JSON.stringify({
         'context_uri': 'spotify:playlist:1udqwx26htiKljZx4HwVxs',
         'position_ms': 0
@@ -264,6 +207,8 @@ function PlayPause(accessToken, playback) {
     }).done(function(response) {
       console.log(response);
     });
+
+    console.log("PLAY");
 
   }
 }
