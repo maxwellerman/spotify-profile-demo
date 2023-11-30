@@ -18,6 +18,8 @@ html {
   background-color: #009234;
   width: auto;
   height: auto;
+  font-size: 56px;
+  padding: 300px;
 }
 .playlistItem:hover {
   background-color: black;
