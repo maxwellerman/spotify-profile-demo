@@ -118,7 +118,7 @@ function populateUI(items) {
     const newButton = document.createElement('button');
     newButton.textContent = name;
     newButton.setAttribute('class', 'col text-center');
-    //newButton.setAttribute('class', 'playlistItem');
+    newButton.setAttribute('class', 'playlistItem');
     //newButton.setAttribute(artist, artists);
     document.body.appendChild(newButton);
     newButton.setAttribute('uri', uri);
