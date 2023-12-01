@@ -1,6 +1,6 @@
 //DO NOT TOUCH ANY OF THIS OR IM GONNA GO CRAZYYYYY PLEASE PLEASE PLEASE PLEASE
 const clientId = "239c02e71a50471c92930526f206636f"
-var redirect_uri = 'http://localhost:8888/callback';
+var redirect_uri = 'https://localhost:5173/callback';
 var clientSecret = '5414e5c0b6554023a148d1607955048d';
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
@@ -38,7 +38,7 @@ export async function redirectToAuthCodeFlow(clientId) {
   const params = new URLSearchParams();
   params.append("client_id", clientId);
   params.append("response_type", "code");	
-  params.append("redirect_uri", "http://localhost:5173/callback");
+  params.append("redirect_uri", "https://localhost:5173/callback");
   params.append("scope", "user-read-playback-state user-modify-playback-state");
   params.append("code_challenge_method", "S256");
   params.append("code_challenge", challenge);
@@ -75,7 +75,7 @@ export async function getAccessToken(clientId, code) {
     params.append("client_id", clientId);
     params.append("grant_type", "authorization_code");
     params.append("code", code);
-    params.append("redirect_uri", "http://localhost:5173/callback");
+    params.append("redirect_uri", "https://maxwellerman.github.io/spotifyjukebox/");
     params.append("code_verifier", verifier);
 
     const result = await fetch("https://accounts.spotify.com/api/token", {
