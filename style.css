@@ -8,6 +8,7 @@ body {
   display: grid;
   place-items: center;
   margin: auto;
+  padding: 50px;
 }
 
 .playlistItem {
@@ -18,7 +19,7 @@ body {
   border-radius: 6px;
   color: white;
   background-color: #1DB954;
-  width: auto;
+  width: 600px;
   height: auto;
   font-size: 28px;
   padding: 50px;
